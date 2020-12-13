@@ -1,8 +1,9 @@
 require('dotenv').config();
 
 const Discord = require("discord.js");
+
 const axios = require('axios').default;
-const time_API_url = "";
+const time_API_url = `https://api.ipgeolocation.io/timezone?apiKey=${process.env.API_KEY}&tz=`;
 
 const client = new Discord.Client(); 
 
@@ -22,28 +23,30 @@ client.on("message", message => {
 });
 
 function extractArgument(msg) {
-    return msg.content.split(' ')[1];
+    const str = msg.content.split(' ')[1];
+    if (str) {
+        return str.toLowerCase();
+    } else {
+        return '';
+    }
 }
     
 let commands = new Map();
 
 commands.set("time", (msg) => {
-    // msg.channel.send(extractArgument(msg));
-    // const requestCity = extractArgument(msg);
-    msg.channel.send("It is some time in Tokyo!");
+    const requestCity = extractArgument(msg);
 
-    // axios.get(`${time_API_url}`)
-    //     .then((response) => {
-    //         // msg.channel.send(response);
-    //         console.log(response);
-    //     })
-    //     .catch((response) => {
-    //         // msg.channel.send(response);
-    //         console.log(response);
-    //     })
-});
-
-commands.set("represent", (msg) => {
-    msg.channel.send("-play plastic love");
-    msg.channel.send("-play stay with me miki");
+    axios.get(`${time_API_url}Asia/Tokyo`)
+        .then((response) => {
+            if(!requestCity) {
+                msg.channel.send(`You haven't specified a city but the current time in Tokyo is ${response.data.time_12}`);
+            } else if(requestCity === 'tokyo') {
+                msg.channel.send(`Current time in Tokyo is ${response.data.time_12}`);
+            } else {
+                msg.channel.send(`I don't know what '${requestCity}' is, but the current time in Tokyo is ${response.data.time_12}`);
+            }
+        })
+        .catch((response) => {
+            msg.channel.send(`Something went wrong. x_x`);
+        })
 });

@@ -12,6 +12,7 @@
   "dependencies": {
     "axios": "^0.21.0",
     "discord.js": "^12.5.1",
-    "dotenv": "^8.2.0"
+    "dotenv": "^8.2.0",
+    "lower-case": "^2.0.2"
   }
 }
