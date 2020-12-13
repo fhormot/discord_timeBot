@@ -2,7 +2,7 @@ require('dotenv').config();
 
 const Discord = require("discord.js");
 const axios = require('axios').default;
-const axios_url = 'http://api.timezonedb.com/v2.1/get-time-zone';
+const time_API_url = "";
 
 const client = new Discord.Client(); 
 
@@ -29,15 +29,21 @@ let commands = new Map();
 
 commands.set("time", (msg) => {
     // msg.channel.send(extractArgument(msg));
-    const requestCity = extractArgument(msg);
+    // const requestCity = extractArgument(msg);
+    msg.channel.send("It is some time in Tokyo!");
 
-    axios.get(`${axios_url}/geo/cities/68526/time`)
-        .then((response) => {
-            // msg.channel.send(response);
-            console.log(response);
-        })
-        .catch((response) => {
-            // msg.channel.send(response);
-            console.log(response);
-        })
-})
+    // axios.get(`${time_API_url}`)
+    //     .then((response) => {
+    //         // msg.channel.send(response);
+    //         console.log(response);
+    //     })
+    //     .catch((response) => {
+    //         // msg.channel.send(response);
+    //         console.log(response);
+    //     })
+});
+
+commands.set("represent", (msg) => {
+    msg.channel.send("-play plastic love");
+    msg.channel.send("-play stay with me miki");
+});
