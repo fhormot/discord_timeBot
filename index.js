@@ -16,8 +16,10 @@ client.once("ready", () => {
 client.on("message", message => {
     if(message.content[0] === '?'){
         const command = message.content.split(' ')[0].substr(1);
-        if (commands.has(command)) { // checks if the map contains the command
-            commands.get(command)(message) // runs the command
+        // Check if the map contains the command
+        if (commands.has(command)) { 
+            // run the command
+            commands.get(command)(message)
         }
     }  
 });
