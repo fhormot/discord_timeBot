@@ -4,7 +4,7 @@ const time_API_url = `https://api.ipgeolocation.io/timezone?apiKey=${process.env
 let commands = new Map();
 
 function extractArgument(msg) {
-    const str = msg.content.split(' ')[1];
+    const str = msg.content.split(' ').slice(1).join(" ");
 
     return (str) ? str : "";
 }
