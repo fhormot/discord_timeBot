@@ -20,7 +20,7 @@ client.once("ready", () => {
 // On message response
 client.on("message", message => {
     if(message.content[0] === '?'){
-        const command = message.content.split(' ')[0].substr(1);
+        const command = message.content.split(' ')[0].substr(1).toLowerCase();
         // Check if the map contains the command
         if (commands.has(command)) { 
             // run the command
