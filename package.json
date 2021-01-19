@@ -11,8 +11,10 @@
   "license": "ISC",
   "dependencies": {
     "axios": "^0.21.0",
+    "casper": "^0.1.1",
     "discord.js": "^12.5.1",
     "dotenv": "^8.2.0",
+    "giphy": "0.0.4",
     "lower-case": "^2.0.2"
   }
 }

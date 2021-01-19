@@ -1,19 +1,30 @@
 require('dotenv').config();
 
+// var casper = require('casper').create();
+
 const Discord = require("discord.js");
 const client = new Discord.Client(); 
 
-// import { commands } from './components/commands';
 let commands = require('./components/commands').commands;
 
 client.login(process.env.DISCORD_TOKEN);
+
+// const timeURL = "https://duckduckgo.com/?t=ffnt&q=time+in+tokyo&ia=time";
+
+// casper.start();
+// casper.open(timeURL);
+
+// casper.then(() => {
+//     console.log(this.test.assertExists('time tx-clr--slate'));
+// });
+
+// casper.arguments();
 
 client.once("ready", () => { 
     // console.log("Ready!");
     
     // Test program
-    // console.log("Starting test.");
-    // client.emit("message", {content: "?time Tokyo"});
+    // testProgram();
 });
 
 
