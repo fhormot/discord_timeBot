@@ -21,3 +21,11 @@ module.exports.msgEmbed = (msg, gif) => {
         .setDescription(`${msg}`)
         .setImage(gif);
 }
+
+module.exports.randIndex = (length) => {
+    return Math.floor(Math.random()*length);
+}
+
+module.exports.randQuery = (list) => {
+    return list[randIndex(query_list.length)];
+}
