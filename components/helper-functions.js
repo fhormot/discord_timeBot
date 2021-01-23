@@ -22,10 +22,12 @@ module.exports.msgEmbed = (msg, gif) => {
         .setImage(gif);
 }
 
-module.exports.randIndex = (length) => {
+const randIndex = (length) => {
     return Math.floor(Math.random()*length);
 }
 
+module.exports.randIndex = randIndex
+
 module.exports.randQuery = (list) => {
-    return list[randIndex(query_list.length)];
+    return list[randIndex(list.length)];
 }
