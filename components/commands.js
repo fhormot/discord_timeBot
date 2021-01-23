@@ -21,10 +21,26 @@ commands.set("help", (msg) => {
         .setTitle('Let me help you better use me!')
         .setDescription('Use \'?\' to address me. The following commands are available:')
         .addFields(
-            { name: 'help', value: 'Prints this help dialog' },
-            { name: 'time (city)', value: 'Returns the current time in the given city (eg. ?time Tokyo will return the current time in Tokyo)' },
-            { name: 'gj (mention)', value: 'Congratulate yourself on a good job. Or mention somebody else.' },
-            { name: 'ganbatte (mention)', value: 'Ganbatte! Do it for yourself or mention somebody else.' }
+            { 
+                name: 'help', 
+                value: 'Prints this help dialog' 
+            },
+            { 
+                name: 'time (city)', 
+                value: 'Returns the current time in the given city (eg. ?time Tokyo will return the current time in Tokyo)' 
+            },
+            { 
+                name: 'gj (mention)', 
+                value: 'Congratulate yourself on a good job. Or mention somebody else.' 
+            },
+            { 
+                name: 'ganbatte (mention)', 
+                value: 'Ganbatte! Do it for yourself or mention somebody else.' 
+            },
+            {
+                name: 'wtf (mention)',
+                value: "WTF?"
+            }
         );
 
     msg.channel.send(resp_help);
@@ -129,6 +145,49 @@ commands.set("ganbatte", (msg) => {
                     resp_msg += ` ${mentionList[idx]}`;
                 }
                 resp_msg += ` and ${mentionList[mentionList.length-1]}, ganbatte!`
+            }
+
+            msg.channel.send(msgEmbed(resp_msg, resp_gif));
+        } else {
+            msg.channel.send(`Something went wrong. x_x`);
+        }
+    })
+});
+
+commands.set("wtf", (msg) => {
+    const args = extractArgument(msg);      // Extract arguments from the message
+    const author = msg.author;
+    let mentionList = map2list(msg.mentions.users);
+
+    const query_select = randQuery([
+        "wtf",
+        "what the fuck"
+    ]);
+
+    giphy.search({q: query_select, limit: resp_num}, (err, resp) => {
+        if(!err){
+            // Pull of a gif
+            const resp_gif = resp.data[randIndex(resp.data.length)].images.original.url;
+
+            let resp_msg = ""; // `${author} wants to say good job to`;
+            
+            if (mentionList.length === 0) {
+                // No arguments given
+                resp_msg += `${author}, WTF?!`;
+            } else if (mentionList.length === 1){
+                // A single argument is given
+                // Check if author == argument
+                if(mentionList[0].id === author.id){
+                    resp_msg += `${author}, WTF?!`;
+                } else {
+                    resp_msg += `${mentionList[0]}, WTF?!`;
+                }
+            } else {
+                // A list of mentions is provided
+                for(let idx = 0; idx < mentionList.length - 1; idx++){
+                    resp_msg += ` ${mentionList[idx]}`;
+                }
+                resp_msg += ` and ${mentionList[mentionList.length-1]}, WTF?!`
             }
 
             msg.channel.send(msgEmbed(resp_msg, resp_gif));

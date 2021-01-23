@@ -26,7 +26,7 @@ const randIndex = (length) => {
     return Math.floor(Math.random()*length);
 }
 
-module.exports.randIndex = randIndex
+module.exports.randIndex = randIndex;
 
 module.exports.randQuery = (list) => {
     return list[randIndex(list.length)];
