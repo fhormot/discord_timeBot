@@ -49,6 +49,10 @@ commands.set("help", (msg) => {
             {
                 name: 'ecchi (mention)',
                 value: 'Proclaim yourself or somebody else a pervert.'
+            },
+            {
+                name: 'hug (mention)',
+                value: 'Hug yourself. Or a friend. You all deserve it.'
             }
         )
         .setFooter(footerMsg);
@@ -230,23 +234,23 @@ commands.set("slap", (msg) => {
             // Pull of a gif
             const resp_gif = resp[0].media[0].gif.url;
 
-            let resp_msg = "";
+            let resp_msg = "${author} is slapping ";
             
             if (mentionList.length === 0) {
                 // No arguments given
-                resp_msg += `${author}, slapped himself! Snap out of it.`;
+                resp_msg += `himself! Snap out of it.`;
             } else if (mentionList.length === 1){
                 // A single argument is given
                 // Check if author == argument
                 if(mentionList[0].id === author.id){
-                    resp_msg += `${author}, slapped himself! Snap out of it.`;
+                    resp_msg += `himself! Snap out of it.`;
                 } else {
-                    resp_msg += `${author} slapped ${mentionList[0]}! Baaaaaka!`;
+                    resp_msg += `${mentionList[0]}! Baaaaaka!`;
                 }
             } else {
                 // A list of mentions is provided
                 for(let idx = 0; idx < mentionList.length - 1; idx++){
-                    resp_msg += ` ${mentionList[idx]}`;
+                    resp_msg += ` ${mentionList[idx]},`;
                 }
                 resp_msg += ` and ${mentionList[mentionList.length-1]}! Kono baka-domo ga!`
             }
@@ -284,7 +288,7 @@ commands.set("ecchi", (msg) => {
                 // A single argument is given
                 // Check if author == argument
                 if(mentionList[0].id === author.id){
-                    resp_msg += `${author} is being a little pervert .`;
+                    resp_msg += `${author} is being a little pervert.`;
                 } else {
                     resp_msg += `${mentionList[0]} no ecchi!`;
                 }
@@ -303,6 +307,51 @@ commands.set("ecchi", (msg) => {
             msg.channel.send(errMsg);
         },
         process.env.ECCHI_LEVEL
+    );
+});
+
+commands.set("hug", (msg) => {
+    const args = extractArgument(msg);      // Extract arguments from the message
+    const author = msg.author;
+    let mentionList = map2list(msg.mentions.users);
+
+    const query_select = randQuery([
+        "hug+anime",
+        "attack+hug+anime"
+    ]);
+
+    tenorSearch(query_select, randIndex(resp_num), 
+        (resp) => {
+            // Pull of a gif
+            const resp_gif = resp[0].media[0].gif.url;
+
+            let resp_msg = "${author} is hugging ";
+            
+            if (mentionList.length === 0) {
+                // No arguments given
+                resp_msg += `himself.`;
+            } else if (mentionList.length === 1){
+                // A single argument is given
+                // Check if author == argument
+                if(mentionList[0].id === author.id){
+                    resp_msg += `himself.`;
+                } else {
+                    resp_msg += `${mentionList[0]}.`;
+                }
+            } else {
+                // A list of mentions is provided
+                for(let idx = 0; idx < mentionList.length - 1; idx++){
+                    resp_msg += ` ${mentionList[idx]},`;
+                }
+                resp_msg += ` and ${mentionList[mentionList.length-1]}.`
+            }
+
+            msg.channel.send(msgEmbed(resp_msg, resp_gif));
+        }, 
+        (err) => {
+            // console.log(err);
+            msg.channel.send(errMsg);
+        }
     );
 });
 
