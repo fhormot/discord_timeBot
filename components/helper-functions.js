@@ -7,7 +7,11 @@ module.exports.extractArgument = (msg) => {
     return (str) ? str : "";
 }
 
-module.exports.errMsg = `Something went wrong. Let me call my dad. x_x`;
+const errMsg    = `Something went wrong. Let me call my dad. x_x`
+const footerMsg = `Via Tenor.`;
+
+module.exports.errMsg = errMsg;
+module.exports.footerMsg = footerMsg;
 
 module.exports.map2list = (map) => {
     let list = [];
@@ -23,13 +27,12 @@ module.exports.msgEmbed = (msg, gif) => {
     return new Discord.MessageEmbed()
         .setDescription(`${msg}`)
         .setImage(gif)
-        .setFooter("Via Tenor");
+        .setFooter(footerMsg);
 }
 
 const randIndex = (length) => {
     return Math.floor(Math.random()*length);
 }
-
 module.exports.randIndex = randIndex;
 
 module.exports.randQuery = (list) => {
@@ -40,7 +43,7 @@ const tenorSearchURL = (query, pos) => {
     return `https://api.tenor.com/v1/search`
         + `?q=${query}`
         + `&locale=en_US`
-        + `&contentfilter=off`
+        + `&contentfilter=off`              
         + `&media_filter=minimal`
         + `&limit=1`
         + `&pos=${pos}`
