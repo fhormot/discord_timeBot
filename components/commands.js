@@ -3,17 +3,17 @@ const Discord = require("discord.js");
 const axios = require('axios').default;
 const time_API_url = `https://api.ipgeolocation.io/timezone?apiKey=${process.env.API_KEY}&tz=`;
 
-const giphy = require('giphy')(process.env.GIPHY_API_KEY);
-
 let commands = new Map();               // Map of commands
-const resp_num = 20;                    // Giphy result limiter
+const resp_num = 20;                    // Gif result limiter => used in combination with rand generator
 
 const {
     extractArgument,
+    errMsg,
     map2list,
     msgEmbed,
     randIndex,
-    randQuery
+    randQuery,
+    tenorSearch
 } = require('./helper-functions');
 
 commands.set("help", (msg) => {
@@ -40,8 +40,13 @@ commands.set("help", (msg) => {
             {
                 name: 'wtf (mention)',
                 value: "WTF?"
+            },
+            {
+                name: 'slap (mention)',
+                value: 'Slap somebody for being a baka.'
             }
-        );
+        )
+        .setFooter("Powered by GIPHY");
 
     msg.channel.send(resp_help);
 });
@@ -72,15 +77,16 @@ commands.set("gj", (msg) => {
     let mentionList = map2list(msg.mentions.users);
 
     const query_select = randQuery([
-        "good job",
-        "great work",
+        "good+job",
+        "good+job+anime",
+        "great+work",
         "success"
     ]);
 
-    giphy.search({q: query_select, limit: resp_num}, (err, resp) => {
-        if(!err){
+    tenorSearch(query_select, randIndex(resp_num), 
+        (resp) => {
             // Pull of a gif
-            const resp_gif = resp.data[randIndex(resp.data.length)].images.original.url;
+            const resp_gif = resp[0].media[0].gif.url;
 
             let resp_msg = `${author} wants to say good job to`;
             
@@ -104,10 +110,12 @@ commands.set("gj", (msg) => {
             }
 
             msg.channel.send(msgEmbed(resp_msg, resp_gif));
-        } else {
-            msg.channel.send(`Something went wrong. x_x`);
+        }, 
+        (err) => {
+            // console.log(err);
+            msg.channel.send(errMsg);
         }
-    })
+    );
 });
 
 commands.set("ganbatte", (msg) => {
@@ -116,17 +124,18 @@ commands.set("ganbatte", (msg) => {
     let mentionList = map2list(msg.mentions.users);
 
     const query_select = randQuery([
-        "do your best",
-        "hang in there",
-        "you can do it"
+        "do+your+best",
+        "hang+in+there",
+        "you+can+do+it",
+        "ganbatte"
     ]);
 
-    giphy.search({q: query_select, limit: resp_num}, (err, resp) => {
-        if(!err){
+    tenorSearch(query_select, randIndex(resp_num), 
+        (resp) => {
             // Pull of a gif
-            const resp_gif = resp.data[randIndex(resp.data.length)].images.original.url;
+            const resp_gif = resp[0].media[0].gif.url;
 
-            let resp_msg = ""; // `${author} wants to say good job to`;
+            let resp_msg = "";
             
             if (mentionList.length === 0) {
                 // No arguments given
@@ -148,10 +157,12 @@ commands.set("ganbatte", (msg) => {
             }
 
             msg.channel.send(msgEmbed(resp_msg, resp_gif));
-        } else {
-            msg.channel.send(`Something went wrong. x_x`);
+        }, 
+        (err) => {
+            // console.log(err);
+            msg.channel.send(errMsg);
         }
-    })
+    );
 });
 
 commands.set("wtf", (msg) => {
@@ -161,15 +172,15 @@ commands.set("wtf", (msg) => {
 
     const query_select = randQuery([
         "wtf",
-        "what the fuck"
+        "what+the+fuck"
     ]);
 
-    giphy.search({q: query_select, limit: resp_num}, (err, resp) => {
-        if(!err){
+    tenorSearch(query_select, randIndex(resp_num), 
+        (resp) => {
             // Pull of a gif
-            const resp_gif = resp.data[randIndex(resp.data.length)].images.original.url;
+            const resp_gif = resp[0].media[0].gif.url;
 
-            let resp_msg = ""; // `${author} wants to say good job to`;
+            let resp_msg = "";
             
             if (mentionList.length === 0) {
                 // No arguments given
@@ -191,10 +202,57 @@ commands.set("wtf", (msg) => {
             }
 
             msg.channel.send(msgEmbed(resp_msg, resp_gif));
-        } else {
-            msg.channel.send(`Something went wrong. x_x`);
+        }, 
+        (err) => {
+            // console.log(err);
+            msg.channel.send(errMsg);
         }
-    })
+    );
+});
+
+commands.set("slap", (msg) => {
+    const args = extractArgument(msg);      // Extract arguments from the message
+    const author = msg.author;
+    let mentionList = map2list(msg.mentions.users);
+
+    const query_select = randQuery([
+        "slap+anime", 
+        "smack+anime"
+    ]);
+
+    tenorSearch(query_select, randIndex(resp_num), 
+        (resp) => {
+            // Pull of a gif
+            const resp_gif = resp[0].media[0].gif.url;
+
+            let resp_msg = "";
+            
+            if (mentionList.length === 0) {
+                // No arguments given
+                resp_msg += `${author}, slapped himself! Snap out of it.`;
+            } else if (mentionList.length === 1){
+                // A single argument is given
+                // Check if author == argument
+                if(mentionList[0].id === author.id){
+                    resp_msg += `${author}, slapped himself! Snap out of it.`;
+                } else {
+                    resp_msg += `${author} slapped ${mentionList[0]}! Baaaaaka!`;
+                }
+            } else {
+                // A list of mentions is provided
+                for(let idx = 0; idx < mentionList.length - 1; idx++){
+                    resp_msg += ` ${mentionList[idx]}`;
+                }
+                resp_msg += ` and ${mentionList[mentionList.length-1]}! Kono baka-domo ga!`
+            }
+
+            msg.channel.send(msgEmbed(resp_msg, resp_gif));
+        }, 
+        (err) => {
+            // console.log(err);
+            msg.channel.send(errMsg);
+        }
+    );
 });
 
 module.exports = { commands };
