@@ -26,8 +26,8 @@ module.exports.map2list = (map) => {
 module.exports.msgEmbed = (msg, gif) => {
     return new Discord.MessageEmbed()
         .setDescription(`${msg}`)
-        .setImage(gif)
-        .setFooter(footerMsg);
+        .setImage(gif);
+        // .setFooter(footerMsg);
 }
 
 const randIndex = (length) => {
@@ -39,11 +39,11 @@ module.exports.randQuery = (list) => {
     return list[randIndex(list.length)];
 }
 
-const tenorSearchURL = (query, pos) => {
+const tenorSearchURL = (query, pos, filter) => {
     return `https://api.tenor.com/v1/search`
         + `?q=${query}`
         + `&locale=en_US`
-        + `&contentfilter=off`              
+        + `&contentfilter=${filter}`              
         + `&media_filter=minimal`
         + `&limit=1`
         + `&pos=${pos}`
@@ -56,8 +56,8 @@ const tenorSearchURL = (query, pos) => {
  *  @callback           (function)  Callback function for a successful response.
  *  @error              (function)  Callback function for an unsuccessful response.
  */
-module.exports.tenorSearch = (search_query, pos, callback, error) => {
-    axios.get(tenorSearchURL(search_query, pos))
+module.exports.tenorSearch = (search_query, pos, callback, error, filter="off") => {
+    axios.get(tenorSearchURL(search_query, pos, filter))
         .then((resp) => {
             callback(resp.data.results);
         })

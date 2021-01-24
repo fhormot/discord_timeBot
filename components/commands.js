@@ -301,7 +301,8 @@ commands.set("ecchi", (msg) => {
         (err) => {
             // console.log(err);
             msg.channel.send(errMsg);
-        }
+        },
+        process.env.ECCHI_LEVEL
     );
 });
 
