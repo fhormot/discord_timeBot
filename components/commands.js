@@ -234,7 +234,7 @@ commands.set("slap", (msg) => {
             // Pull of a gif
             const resp_gif = resp[0].media[0].gif.url;
 
-            let resp_msg = "${author} is slapping ";
+            let resp_msg = `${author} is slapping `;
             
             if (mentionList.length === 0) {
                 // No arguments given
@@ -325,7 +325,7 @@ commands.set("hug", (msg) => {
             // Pull of a gif
             const resp_gif = resp[0].media[0].gif.url;
 
-            let resp_msg = "${author} is hugging ";
+            let resp_msg = `${author} is hugging `;
             
             if (mentionList.length === 0) {
                 // No arguments given
