@@ -1,24 +1,17 @@
 require('dotenv').config();
 
-// var casper = require('casper').create();
+const browser = require("./components/time-scrapper");
 
 const Discord = require("discord.js");
 const client = new Discord.Client(); 
 
 let commands = require('./components/commands').commands;
 
-client.login(process.env.DISCORD_TOKEN);
 
-// const timeURL = "https://duckduckgo.com/?t=ffnt&q=time+in+tokyo&ia=time";
-
-// casper.start();
-// casper.open(timeURL);
-
-// casper.then(() => {
-//     console.log(this.test.assertExists('time tx-clr--slate'));
-// });
-
-// casper.arguments();
+browser.launcher().then(async () => {
+    // console.log(await browser.getTime("Tokyo"));
+    client.login(process.env.DISCORD_TOKEN);
+})
 
 client.once("ready", () => { 
     // console.log("Ready!");

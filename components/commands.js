@@ -3,6 +3,8 @@ const Discord = require("discord.js");
 const axios = require('axios').default;
 const time_API_url = `https://api.ipgeolocation.io/timezone?apiKey=${process.env.API_KEY}&tz=`;
 
+const browser = require("./time-scrapper");
+
 let commands = new Map();                           // Map of commands
 const resp_num = process.env.TENOR_SEARCH_SCOPE;    // Gif result limiter => used in combination with rand generator
 
@@ -60,24 +62,40 @@ commands.set("help", (msg) => {
     msg.channel.send(resp_help);
 });
 
-commands.set("time", (msg) => {
+commands.set("time", async (msg) => {
     const requestCity = extractArgument(msg);
 
-    axios.get(`${time_API_url}Asia/Tokyo`)
-        .then((response) => {
-            let msg_response = `I don't know what '${requestCity}' is, but the current time in Tokyo is ${response.data.time_12}`;
+    // axios.get(`${time_API_url}Asia/Tokyo`)
+    //     .then((response) => {
+    //         let msg_response = `I don't know what '${requestCity}' is, but the current time in Tokyo is ${response.data.time_12}`;
 
-            if(!requestCity) {
-                msg_response = `You haven't specified a city, but the current time in Tokyo is ${response.data.time_12}`;
-            } else if(requestCity.toLowerCase() === 'tokyo') {
-                msg_response = `Current time in Tokyo is ${response.data.time_12}`;
+    //         if(!requestCity) {
+    //             msg_response = `You haven't specified a city, but the current time in Tokyo is ${response.data.time_12}`;
+    //         } else if(requestCity.toLowerCase() === 'tokyo') {
+    //             msg_response = `Current time in Tokyo is ${response.data.time_12}`;
+    //         }
+
+    //         msg.channel.send(msg_response)
+    //     })
+    //     .catch((response) => {
+    //         msg.channel.send(`Something went wrong. x_x`);
+    //     })
+
+    await browser.getTime(requestCity).then(
+        (resp => {
+            if(resp.err){
+                msg.channel.send(`Something went wrong. x_x`);
+            } else {
+                const details = resp.response.details;
+
+                msg.channel.send(
+                    new Discord.MessageEmbed()
+                    .setDescription(`Current time in ${requestCity} is ${resp.response.time}`)
+                    .addField('Details', details.join("\n"))
+                );
             }
-
-            msg.channel.send(msg_response)
         })
-        .catch((response) => {
-            msg.channel.send(`Something went wrong. x_x`);
-        })
+    )
 });
 
 commands.set("gj", (msg) => {
