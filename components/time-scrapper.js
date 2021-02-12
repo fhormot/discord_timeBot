@@ -8,7 +8,15 @@ const getURL = (city) => {
 
 const main = async () => {
     // Open new page in headless browser 
-    browser = await puppeteer.launch();
+    browser = await puppeteer.launch({
+        headless: true,
+        args: [
+            "--incognito",
+            "--no-sandbox",
+            "--single-process",
+            "--no-zygote"
+        ]
+    });
 }
 
 const getTime = async (city) => {

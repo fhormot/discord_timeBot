@@ -81,8 +81,8 @@ commands.set("time", async (msg) => {
     //         msg.channel.send(`Something went wrong. x_x`);
     //     })
 
-    await browser.getTime(requestCity).then(
-        (resp => {
+    await browser.getTime(requestCity)
+        .then((resp => {
             if(resp.err){
                 msg.channel.send(`Something went wrong. x_x`);
             } else {
@@ -94,8 +94,10 @@ commands.set("time", async (msg) => {
                     .addField('Details', details.join("\n"))
                 );
             }
+        }))
+        .catch(err => {
+            console.log(err);
         })
-    )
 });
 
 commands.set("gj", (msg) => {

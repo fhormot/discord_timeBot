@@ -8,10 +8,14 @@ const client = new Discord.Client();
 let commands = require('./components/commands').commands;
 
 
-browser.launcher().then(async () => {
-    // console.log(await browser.getTime("Tokyo"));
-    client.login(process.env.DISCORD_TOKEN);
-})
+browser.launcher()
+    .then(async () => {
+        // console.log(await browser.getTime("Tokyo"));
+        client.login(process.env.DISCORD_TOKEN);
+    })
+    .catch(err => {
+        console.log(err);
+    })
 
 client.once("ready", () => { 
     // console.log("Ready!");
